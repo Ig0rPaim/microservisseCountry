@@ -10,9 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.microsservices.country.dtos.CountryMedalDto;
+import com.microsservices.country.dtos.CountryMedalInSportsDto;
+import com.microsservices.country.dtos.MedalDto;
 import com.microsservices.country.models.Country;
 import com.microsservices.country.models.CountryMedalInSports;
 import com.microsservices.country.models.Medal;
+import com.microsservices.country.models.Sport;
 import com.microsservices.country.repositorys.CountryMedalInSportsRepository;
 
 @Service
@@ -20,10 +23,33 @@ public class CountryService{
     @Autowired
     private CountryMedalInSportsRepository repository;
 
-    public ResponseEntity<CountryMedalInSports> getCountry(String name){
+    public ResponseEntity<CountryMedalInSportsDto> getCountry(String name){
         try{
-            List<CountryMedalInSports> country = repository.findByCountryName(name);
-            return ResponseEntity.ok().body(country.get(0));
+            List<CountryMedalInSports> results = repository.findByCountryName(name);
+            Map<Medal, List<Sport>> medalsSportMap = new HashMap<>();
+            CountryMedalInSportsDto countryMedalInSportDto = new CountryMedalInSportsDto();
+            for(CountryMedalInSports result : results){
+                Medal medal = result.getMedal();
+                Sport sport = result.getSport();
+                 
+                if(medal != null){
+                    medalsSportMap
+                        .computeIfAbsent(medal, k -> new ArrayList<>())
+                        .add(sport);
+                }
+            }
+            List<MedalDto> medalDtos = new ArrayList<>();
+            for(Map.Entry<Medal, List<Sport>> entry : medalsSportMap.entrySet()){
+                MedalDto dto = new MedalDto();
+                dto.setMedal(entry.getKey());
+                dto.setSports(entry.getValue());
+                medalDtos.add(dto);
+            }
+            countryMedalInSportDto.setCountry(results.get(0).getCountry());
+            countryMedalInSportDto.setMedals(medalDtos);
+
+
+            return ResponseEntity.ok().body(countryMedalInSportDto);
 
         }catch(Exception e){
             return ResponseEntity.badRequest().build();
