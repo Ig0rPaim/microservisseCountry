@@ -26,5 +26,16 @@ public class CountryMedalInSports{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_country", referencedColumnName = "id")
     private Country country;
+    
+    public CountryMedalInSports() {
+    }
+
+    public CountryMedalInSports(Sport sport, Medal medal, Country country) {
+        this.sport = sport;
+        this.medal = medal;
+        this.country = country;
+    }
+
+    
 
 }
