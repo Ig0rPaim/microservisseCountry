@@ -19,7 +19,7 @@ public class MedalsController {
     MedalService service;
 
     @PostMapping()
-    public ResponseEntity postMedals(@RequestBody CountryMedalInSport_PostDto entity) {
+    public ResponseEntity<Void> postMedals(@RequestBody CountryMedalInSport_PostDto entity) {
         return service.postMedals(entity);
     }
     

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.microsservices.country.repositorys.MedalRepository;
@@ -20,6 +19,7 @@ import com.microsservices.country.repositorys.CountryMedalInSportsRepository;
 import com.microsservices.country.repositorys.CountryRespository;
 
 import com.microsservices.country.dtos.CountryMedalInSport_PostDto;
+import com.microsservices.country.enums.MedalType;
 import com.microsservices.country.models.Country;
 import com.microsservices.country.models.CountryMedalInSports;
 import com.microsservices.country.models.Medal;
@@ -38,18 +38,33 @@ public class MedalService {
     CountryMedalInSportsRepository csmRepository;
 
     @Transactional
-    public ResponseEntity postMedals(CountryMedalInSport_PostDto entity){
+    public ResponseEntity<Void> postMedals(CountryMedalInSport_PostDto entity){
         try{
             Country country = new Country(entity.country());
             Medal medal = new Medal(entity.medal());
             Sport sport = new Sport(entity.sport());
-            CountryMedalInSports countryMedalInSports = 
-                new CountryMedalInSports(sport, medal, country);
-            CountryMedalInSports retorno = saveEntitys(country, medal, sport, countryMedalInSports);
+            CountryMedalInSports retorno = saveEntitys(country, medal, sport);
             return buildReturn(retorno);
         }catch(Exception e){
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    private CountryMedalInSports saveEntitys(Country country, Medal medal, Sport sport) throws Exception{
+        Country c = findCountry(country); 
+        Medal m = findMedal(medal);
+        Sport s = findSport(sport);
+        return csmRepository.save(new CountryMedalInSports(s, m, c));
+    }
+
+    private ResponseEntity<Void> buildReturn(CountryMedalInSports csm){
+            URI location = UriComponentsBuilder
+                            .fromPath("/api/Country/{name}")
+                            .buildAndExpand(csm.getCountry().getName())
+                            .toUri();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(location);
+            return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     private Country findCountry(Country c) throws Exception{
@@ -66,32 +81,17 @@ public class MedalService {
         return sport;
     }
 
-    // private Medal findMedal(Medal m){
-    //     switch (m.getType()) {
-    //         case MedalType.:
-                
-    //             break;
-        
-    //         default:
-    //             break;
-    //     }
-    // }
-
-    private CountryMedalInSports saveEntitys(Country country, Medal medal, Sport sport, CountryMedalInSports csm){
-        countryRespository.save(country);
-        medalRepository.save(medal);
-        sportRepository.save(sport);
-        return csmRepository.save(csm);
-    }
-
-    private ResponseEntity buildReturn(CountryMedalInSports csm){
-            URI location = UriComponentsBuilder
-                            .fromPath("/api/Country/{name}")
-                            .buildAndExpand(csm.getCountry().getName())
-                            .toUri();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(location);
-            return new ResponseEntity<>(headers, HttpStatus.CREATED);
+    private Medal findMedal(Medal m){
+        switch (m.getType()) {
+            case OURO:
+                return new Medal(1L, MedalType.OURO);
+            case PRATA:
+                return new Medal(2L, MedalType.PRATA);
+            case BRONZE:
+                return new Medal(3L, MedalType.BRONZE);
+            default:
+                throw new IllegalArgumentException("Tipo de medalha desconhecido: " + m.getType());
+        }
     }
     
 }
