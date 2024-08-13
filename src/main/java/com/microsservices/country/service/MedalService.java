@@ -52,6 +52,31 @@ public class MedalService {
         }
     }
 
+    private Country findCountry(Country c) throws Exception{
+        Country country =  countryRespository.findByName(c.getName());
+        if(country == null)
+            throw new Exception("country not find");
+        return country;
+    }
+
+    private Sport findSport(Sport s) throws Exception{
+        Sport sport = sportRepository.findByName(s.getName());
+        if(sport == null)
+            throw new Exception("sport not find");
+        return sport;
+    }
+
+    // private Medal findMedal(Medal m){
+    //     switch (m.getType()) {
+    //         case MedalType.:
+                
+    //             break;
+        
+    //         default:
+    //             break;
+    //     }
+    // }
+
     private CountryMedalInSports saveEntitys(Country country, Medal medal, Sport sport, CountryMedalInSports csm){
         countryRespository.save(country);
         medalRepository.save(medal);
