@@ -1,5 +1,7 @@
 package com.microsservices.country.models;
 
+import com.microsservices.country.dtos.SportDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,4 +18,11 @@ public class Sport{
     private Long id;
     private String name;
     private String description;
+    public Sport() {
+    }
+    public Sport(SportDto s) {
+        this.name = s.name();
+        this.description = s.description();
+    }
+    
 }

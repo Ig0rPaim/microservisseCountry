@@ -1,5 +1,7 @@
 package com.microsservices.country.models;
 
+import com.microsservices.country.dtos.CountryDto;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,4 +18,12 @@ public class Country{
     private Long id;
     private String name;
     private byte[] flag;
+    public Country() {
+    }
+    public Country(CountryDto c) {
+        this.name = c.name();
+        this.flag = c.flag();
+    }
+
+    
 }

@@ -1,5 +1,6 @@
 package com.microsservices.country.models;
 
+import com.microsservices.country.dtos.Medal_PostDto;
 import com.microsservices.country.enums.MedalType;
 
 import jakarta.persistence.Entity;
@@ -20,4 +21,11 @@ public class Medal{
     private Long id;
     @Enumerated(EnumType.STRING)
     private MedalType type;
+    public Medal() {
+    }
+    public Medal(Medal_PostDto m) {
+        this.type = m.type();
+    }
+
+    
 }

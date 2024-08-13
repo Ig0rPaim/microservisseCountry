@@ -40,9 +40,9 @@ public class MedalService {
     @Transactional
     public ResponseEntity postMedals(CountryMedalInSport_PostDto entity){
         try{
-            Country country = entity.country();
-            Medal medal = entity.medal();
-            Sport sport = entity.sport();
+            Country country = new Country(entity.country());
+            Medal medal = new Medal(entity.medal());
+            Sport sport = new Sport(entity.sport());
             CountryMedalInSports countryMedalInSports = 
                 new CountryMedalInSports(sport, medal, country);
             CountryMedalInSports retorno = saveEntitys(country, medal, sport, countryMedalInSports);
