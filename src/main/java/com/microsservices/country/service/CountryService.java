@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.microsservices.country.criptografia.CriptografiaAES;
+import com.microsservices.country.dtos.CountryDto;
 import com.microsservices.country.dtos.CountryMedalDto;
 import com.microsservices.country.dtos.CountryMedalInSportsDto;
 import com.microsservices.country.dtos.MedalDto;
@@ -59,21 +61,22 @@ public class CountryService{
     public ResponseEntity<List<CountryMedalDto>> getCountrys(){
         try{
             var results = repository.findCountriesAndMedals();
-             Map<Country, List<Medal>> countryMedalsMap = new HashMap<>();
+            Map<CountryDto, List<Medal>> countryMedalsMap = new HashMap<>();//Map<Country, List<Medal>> countryMedalsMap = new HashMap<>();
 
             for(CountryMedalInSports result : results){
                 Country country = result.getCountry();
+                CountryDto countryDto = new CountryDto(country);
                 Medal medal = result.getMedal();
     
-                if (country != null) {
+                if (countryDto != null) {
                     countryMedalsMap
-                        .computeIfAbsent(country, k -> new ArrayList<>())
+                        .computeIfAbsent(countryDto, k -> new ArrayList<>())
                         .add(medal);
                 }
             }
             
             List<CountryMedalDto> dtos = new ArrayList<>();
-            for (Map.Entry<Country, List<Medal>> entry : countryMedalsMap.entrySet()) {
+            for (Map.Entry<CountryDto, List<Medal>> entry : countryMedalsMap.entrySet()) {
                 CountryMedalDto dto = new CountryMedalDto();
                 dto.setCountry(entry.getKey());
                 dto.setMedals(entry.getValue());

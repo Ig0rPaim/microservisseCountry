@@ -21,8 +21,8 @@ public class Country{
     public Country() {
     }
     public Country(CountryDto c) {
-        this.name = c.name();
-        this.flag = c.flag();
+        this.name = c.getName();
+        this.flag = c.getFlag();
     }
 
     

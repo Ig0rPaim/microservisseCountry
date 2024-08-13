@@ -7,5 +7,7 @@ import com.microsservices.country.models.Country;
 
 public interface CountryRespository  extends JpaRepository<Country, Long>{
 
+    Country findByName(String name);
+
     
 }

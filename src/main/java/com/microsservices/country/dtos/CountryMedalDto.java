@@ -12,14 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CountryMedalDto {
-    private Country country;
+    private CountryDto country;//private Country country;
     private List<Medal> medals;
 
     public CountryMedalDto(){
 
     }
-    public CountryMedalDto(Country country, List<Medal> medals){
+    public CountryMedalDto(CountryDto country, List<Medal> medals){
         this.country = country;
         this.medals = medals;
     }
-}
+}   

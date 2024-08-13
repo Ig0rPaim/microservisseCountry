@@ -7,5 +7,7 @@ import com.microsservices.country.models.Sport;
 
 public interface SportRepository  extends JpaRepository<Sport, Long>{
 
+    Sport findByName(String name);
+
     
 }

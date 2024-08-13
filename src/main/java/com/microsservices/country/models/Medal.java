@@ -26,6 +26,11 @@ public class Medal{
     public Medal(Medal_PostDto m) {
         this.type = m.type();
     }
+    public Medal(Long id, MedalType type) {
+        this.id = id;
+        this.type = type;
+    }
+    
 
     
 }

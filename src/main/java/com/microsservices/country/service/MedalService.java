@@ -54,7 +54,7 @@ public class MedalService {
         Country c = findCountry(country); 
         Medal m = findMedal(medal);
         Sport s = findSport(sport);
-        return csmRepository.save(new CountryMedalInSports(s, m, c));
+        return csmRepository.save(new CountryMedalInSports(s, m, c)); //VERIFICAR SE JÁ EXISTE ANTES DE SALVAR
     }
 
     private ResponseEntity<Void> buildReturn(CountryMedalInSports csm){

@@ -1,9 +1,53 @@
 package com.microsservices.country.dtos;
 
+import com.microsservices.country.criptografia.CriptografiaAES;
 import com.microsservices.country.models.Country;
 
-public record CountryDto(String name, byte[] flag) {
+// @Getter
+// @Setter
+public class CountryDto {
+    private String id;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    private String name;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private byte[] flag;
+    public byte[] getFlag() {
+        return flag;
+    }
+
+    public void setFlag(byte[] flag) {
+        this.flag = flag;
+    }
+
+    private final CriptografiaAES criptografiaAES = new CriptografiaAES();
+
+    public CountryDto(String id, String name, byte[] flag) {
+        this.id = id;
+        this.name = name;
+        this.flag = flag;
+    }
+
     public CountryDto(Country c){
-        this(c.getName(), c.getFlag());
+        try{
+            this.id = criptografiaAES.encrypt(c.getId().toString()); 
+            this.name = c.getName(); 
+            this.flag = c.getFlag();
+        }catch(Exception e){
+               
+        }
     }    
 }
